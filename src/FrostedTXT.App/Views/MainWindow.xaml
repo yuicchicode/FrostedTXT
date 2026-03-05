@@ -1,0 +1,85 @@
+<Window x:Class="FrostedTXT.App.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:controls="clr-namespace:FrostedTXT.App.Controls"
+        mc:Ignorable="d"
+        Title="FrostedTXT"
+        Height="700"
+        Width="980"
+        MinHeight="450"
+        MinWidth="700"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent">
+    <Grid>
+        <Border Background="{Binding Settings.TintColor}"
+                Opacity="{Binding Settings.BackgroundOpacity}" />
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0" Margin="10,8,10,6" MouseLeftButtonDown="TopBar_OnMouseLeftButtonDown">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <TabControl ItemsSource="{Binding Tabs}"
+                            SelectedItem="{Binding SelectedTab}">
+                    <TabControl.ItemTemplate>
+                        <DataTemplate>
+                            <controls:TabHeaderControl />
+                        </DataTemplate>
+                    </TabControl.ItemTemplate>
+                    <TabControl.ContentTemplate>
+                        <DataTemplate>
+                            <Border Background="#06000000" Padding="0" Margin="0">
+                                <TextBox Text="{Binding TextContent, UpdateSourceTrigger=PropertyChanged}"
+                                         AcceptsReturn="True"
+                                         AcceptsTab="True"
+                                         VerticalScrollBarVisibility="Auto"
+                                         HorizontalScrollBarVisibility="Auto"
+                                         TextWrapping="{Binding DataContext.Settings.WordWrapEnabled, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource BoolToWrapConverter}}"
+                                         FontFamily="{Binding DataContext.Settings.FontFamilyName, RelativeSource={RelativeSource AncestorType=Window}}"
+                                         BorderThickness="0"
+                                         Background="Transparent">
+                                    <TextBox.FontSize>
+                                        <MultiBinding Converter="{StaticResource MultiplyDoubleConverter}">
+                                            <Binding Path="DataContext.Settings.FontSizeBase" RelativeSource="{RelativeSource AncestorType=Window}" />
+                                            <Binding Path="DataContext.Settings.ZoomLevel" RelativeSource="{RelativeSource AncestorType=Window}" />
+                                        </MultiBinding>
+                                    </TextBox.FontSize>
+                                </TextBox>
+                            </Border>
+                        </DataTemplate>
+                    </TabControl.ContentTemplate>
+                </TabControl>
+
+                <controls:DropdownMenuButton Grid.Column="1"
+                                             Margin="8,0,0,0"
+                                             VerticalAlignment="Top"
+                                             NewTabCommand="{Binding NewTabCommand}"
+                                             OpenCommand="{Binding OpenCommand}"
+                                             SaveCommand="{Binding SaveCommand}"
+                                             SaveAsCommand="{Binding SaveAsCommand}"
+                                             SettingsCommand="{Binding OpenSettingsCommand}"
+                                             AboutCommand="{Binding OpenAboutCommand}"
+                                             ExitCommand="{Binding CloseAppCommand}" />
+            </Grid>
+
+            <StatusBar Grid.Row="1" VerticalAlignment="Bottom" Background="#08000000" Margin="10,0,10,10">
+                <StatusBarItem>
+                    <TextBlock Text="{Binding SelectedTab.LastAutoSavedAt, StringFormat=Auto-saved: {0:G}}" />
+                </StatusBarItem>
+                <StatusBarItem>
+                    <TextBlock Text="{Binding SelectedTab.FilePath, StringFormat=Path: {0}}" />
+                </StatusBarItem>
+            </StatusBar>
+        </Grid>
+    </Grid>
+</Window>

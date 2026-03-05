@@ -1,0 +1,12 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Color x:Key="FrostBackground">#101010</Color>
+    <Color x:Key="FrostPanel">#1E1E1E</Color>
+    <Color x:Key="FrostBorder">#44FFFFFF</Color>
+    <Color x:Key="FrostForeground">#F3F3F3</Color>
+
+    <SolidColorBrush x:Key="FrostBackgroundBrush" Color="{StaticResource FrostBackground}" />
+    <SolidColorBrush x:Key="FrostPanelBrush" Color="{StaticResource FrostPanel}" />
+    <SolidColorBrush x:Key="FrostBorderBrush" Color="{StaticResource FrostBorder}" />
+    <SolidColorBrush x:Key="FrostForegroundBrush" Color="{StaticResource FrostForeground}" />
+</ResourceDictionary>

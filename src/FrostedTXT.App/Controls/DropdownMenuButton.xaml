@@ -1,0 +1,28 @@
+<UserControl x:Class="FrostedTXT.App.Controls.DropdownMenuButton"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Name="Root">
+    <Grid>
+        <Button x:Name="MenuButton"
+                Content="..."
+                Width="32"
+                Height="26"
+                Click="MenuButton_OnClick">
+            <Button.ContextMenu>
+                <ContextMenu x:Name="MenuPopup"
+                             PlacementTarget="{Binding ElementName=MenuButton}">
+                    <MenuItem Header="New Tab" Click="NewTab_OnClick" />
+                    <MenuItem Header="Open..." Click="Open_OnClick" />
+                    <Separator />
+                    <MenuItem Header="Save" Click="Save_OnClick" />
+                    <MenuItem Header="Save As..." Click="SaveAs_OnClick" />
+                    <Separator />
+                    <MenuItem Header="Settings..." Click="Settings_OnClick" />
+                    <MenuItem Header="About..." Click="About_OnClick" />
+                    <Separator />
+                    <MenuItem Header="Exit" Click="Exit_OnClick" />
+                </ContextMenu>
+            </Button.ContextMenu>
+        </Button>
+    </Grid>
+</UserControl>

@@ -1,0 +1,11 @@
+<UserControl x:Class="FrostedTXT.App.Controls.FrostedTitleBar"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Height="34">
+    <Grid Background="Transparent">
+        <TextBlock Text="FrostedTXT"
+                   VerticalAlignment="Center"
+                   Margin="12,0,0,0"
+                   FontWeight="SemiBold" />
+    </Grid>
+</UserControl>

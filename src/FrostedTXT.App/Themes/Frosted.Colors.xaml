@@ -4,9 +4,31 @@
     <Color x:Key="FrostPanel">#1E1E1E</Color>
     <Color x:Key="FrostBorder">#44FFFFFF</Color>
     <Color x:Key="FrostForeground">#F3F3F3</Color>
+    <Color x:Key="FrostSurface">#14FFFFFF</Color>
+    <Color x:Key="FrostSurfaceHover">#20FFFFFF</Color>
+    <Color x:Key="FrostSurfaceActive">#2AFFFFFF</Color>
+    <Color x:Key="FrostSeparator">#1FFFFFFF</Color>
+    <Color x:Key="FrostAccent">#66A8D8FF</Color>
+    <Color x:Key="FrostTextPrimary">#F2FFFFFF</Color>
+    <Color x:Key="FrostTextSecondary">#B8FFFFFF</Color>
+    <Color x:Key="FrostScrollThumb">#66FFFFFF</Color>
+    <Color x:Key="FrostScrollThumbHover">#99FFFFFF</Color>
+    <Color x:Key="FrostScrollThumbDrag">#CCFFFFFF</Color>
+    <Color x:Key="FrostFocusRing">#A0FFFFFF</Color>
 
     <SolidColorBrush x:Key="FrostBackgroundBrush" Color="{StaticResource FrostBackground}" />
     <SolidColorBrush x:Key="FrostPanelBrush" Color="{StaticResource FrostPanel}" />
     <SolidColorBrush x:Key="FrostBorderBrush" Color="{StaticResource FrostBorder}" />
     <SolidColorBrush x:Key="FrostForegroundBrush" Color="{StaticResource FrostForeground}" />
+    <SolidColorBrush x:Key="FrostSurfaceBrush" Color="{StaticResource FrostSurface}" />
+    <SolidColorBrush x:Key="FrostSurfaceHoverBrush" Color="{StaticResource FrostSurfaceHover}" />
+    <SolidColorBrush x:Key="FrostSurfaceActiveBrush" Color="{StaticResource FrostSurfaceActive}" />
+    <SolidColorBrush x:Key="FrostSeparatorBrush" Color="{StaticResource FrostSeparator}" />
+    <SolidColorBrush x:Key="FrostAccentBrush" Color="{StaticResource FrostAccent}" />
+    <SolidColorBrush x:Key="FrostTextPrimaryBrush" Color="{StaticResource FrostTextPrimary}" />
+    <SolidColorBrush x:Key="FrostTextSecondaryBrush" Color="{StaticResource FrostTextSecondary}" />
+    <SolidColorBrush x:Key="FrostScrollThumbBrush" Color="{StaticResource FrostScrollThumb}" />
+    <SolidColorBrush x:Key="FrostScrollThumbHoverBrush" Color="{StaticResource FrostScrollThumbHover}" />
+    <SolidColorBrush x:Key="FrostScrollThumbDragBrush" Color="{StaticResource FrostScrollThumbDrag}" />
+    <SolidColorBrush x:Key="FrostFocusRingBrush" Color="{StaticResource FrostFocusRing}" />
 </ResourceDictionary>

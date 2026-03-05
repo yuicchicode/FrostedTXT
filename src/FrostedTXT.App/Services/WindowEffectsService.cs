@@ -2,7 +2,6 @@ using System.Windows;
 using System.Windows.Media;
 using FrostedTXT.App.Infrastructure.Interop;
 using FrostedTXT.App.Models;
-using FrostedTXT.App.Models.Enums;
 
 namespace FrostedTXT.App.Services;
 
@@ -16,54 +15,40 @@ public sealed class WindowEffectsService
             return;
         }
 
-        if (window.AllowsTransparency)
+        if (settings.BlurLevel <= 0.01)
         {
             DwmApi.TryApplySystemBackdrop(handle, backdropType: 1);
             User32Accent.TryDisable(handle);
             return;
         }
 
-        var mode = settings.BlurMode;
-        if (mode == BlurMode.None)
-        {
-            DwmApi.TryApplySystemBackdrop(handle, backdropType: 1);
-            User32Accent.TryDisable(handle);
-            return;
-        }
+        var level = Math.Clamp(settings.BlurLevel, 0.0, 40.0);
+        var strength = level / 40.0;
 
         var tintColor = ParseColor(settings.TintColor);
-        var alpha = (byte)(Math.Clamp(settings.BackgroundOpacity, 0.0, 1.0) * 255);
+        var tintOpacity = Math.Clamp(settings.BackgroundOpacity, 0.0, 1.0);
+        var alpha = (byte)(tintOpacity * 255);
+        var accentAlpha = (byte)Math.Clamp(alpha + (strength * 80), 24, 220);
 
-        if (mode == BlurMode.Auto)
+        // For transparent window mode, prefer accent since DWM backdrop is not reliable there.
+        if (window.AllowsTransparency)
         {
-            if (User32Accent.TrySetBlur(handle, acrylicLike: true, alpha, tintColor.R, tintColor.G, tintColor.B))
+            if (User32Accent.TrySetBlur(handle, acrylicLike: true, accentAlpha, tintColor.R, tintColor.G, tintColor.B))
             {
                 return;
             }
 
-            if (DwmApi.TryEnableBlurBehind(handle))
+            if (!User32Accent.TrySetBlur(handle, acrylicLike: false, accentAlpha, tintColor.R, tintColor.G, tintColor.B))
             {
-                return;
-            }
-
-            DwmApi.TryApplySystemBackdrop(handle, backdropType: 3);
-            return;
-        }
-
-        if (mode == BlurMode.Blur)
-        {
-            if (!User32Accent.TrySetBlur(handle, acrylicLike: false, alpha, tintColor.R, tintColor.G, tintColor.B))
-            {
-                if (!DwmApi.TryEnableBlurBehind(handle))
-                {
-                    DwmApi.TryApplySystemBackdrop(handle, backdropType: 2);
-                }
+                DwmApi.TryEnableBlurBehind(handle);
             }
 
             return;
         }
 
-        if (!User32Accent.TrySetBlur(handle, acrylicLike: true, alpha, tintColor.R, tintColor.G, tintColor.B))
+        DwmApi.TryExtendFrameIntoClientArea(handle);
+
+        if (!User32Accent.TrySetBlur(handle, acrylicLike: true, accentAlpha, tintColor.R, tintColor.G, tintColor.B))
         {
             if (!DwmApi.TryEnableBlurBehind(handle))
             {

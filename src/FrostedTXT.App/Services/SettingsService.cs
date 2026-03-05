@@ -17,10 +17,16 @@ public sealed class SettingsService
         AppPaths.EnsureDirectories();
         var settings = await _store.LoadAsync(AppPaths.SettingsFile, () => new AppSettings(), cancellationToken).ConfigureAwait(false);
 
-        settings.BackgroundOpacity = Math.Clamp(settings.BackgroundOpacity, 0.05, 0.45);
-        if (settings.BackgroundOpacity > 0.28)
+        settings.BackgroundOpacity = Math.Clamp(settings.BackgroundOpacity, 0.05, 0.35);
+        if (settings.BackgroundOpacity > 0.22)
         {
-            settings.BackgroundOpacity = 0.18;
+            settings.BackgroundOpacity = 0.14;
+        }
+
+        settings.BlurLevel = Math.Clamp(settings.BlurLevel, 0.0, 40.0);
+        if (settings.BlurLevel < 1.0)
+        {
+            settings.BlurLevel = 16.0;
         }
 
         if (string.IsNullOrWhiteSpace(settings.TintColor))

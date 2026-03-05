@@ -3,7 +3,6 @@ using System.Windows;
 using System.Windows.Media;
 using FrostedTXT.App.Infrastructure.Utils;
 using FrostedTXT.App.Models;
-using FrostedTXT.App.Models.Enums;
 using FrostedTXT.App.Services;
 
 namespace FrostedTXT.App.ViewModels;
@@ -23,12 +22,10 @@ public sealed class SettingsViewModel : ObservableObject
         _window = window;
 
         AvailableFonts = new ObservableCollection<string>(fontCatalogService.GetInstalledFontFamilies());
-        BlurModes = Enum.GetValues(typeof(BlurMode)).Cast<BlurMode>().ToList();
         SaveCommand = new RelayCommand(async () => await _settingsService.SaveAsync(_settings).ConfigureAwait(false));
     }
 
     public ObservableCollection<string> AvailableFonts { get; }
-    public IReadOnlyList<BlurMode> BlurModes { get; }
 
     public RelayCommand SaveCommand { get; }
 
@@ -58,6 +55,7 @@ public sealed class SettingsViewModel : ObservableObject
             _settings.BackgroundOpacity = value;
             OnPropertyChanged();
             OnPropertyChanged(nameof(TintBrush));
+            ApplyWindowEffects();
         }
     }
 
@@ -69,15 +67,16 @@ public sealed class SettingsViewModel : ObservableObject
             _settings.TintColor = value;
             OnPropertyChanged();
             OnPropertyChanged(nameof(TintBrush));
+            ApplyWindowEffects();
         }
     }
 
-    public BlurMode BlurMode
+    public double BlurLevel
     {
-        get => _settings.BlurMode;
+        get => _settings.BlurLevel;
         set
         {
-            _settings.BlurMode = value;
+            _settings.BlurLevel = value;
             OnPropertyChanged();
             ApplyWindowEffects();
         }

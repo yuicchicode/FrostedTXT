@@ -13,56 +13,118 @@
         WindowStyle="None"
         AllowsTransparency="True"
         Background="Transparent">
-    <Grid>
-        <Border Background="{Binding Settings.TintColor}"
-                Opacity="{Binding Settings.BackgroundOpacity}" />
+    <Window.Resources>
+        <Style x:Key="HeaderOnlyTabControlStyle" TargetType="{x:Type TabControl}">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type TabControl}">
+                        <Grid>
+                            <ScrollViewer HorizontalScrollBarVisibility="Auto"
+                                          VerticalScrollBarVisibility="Disabled"
+                                          CanContentScroll="False"
+                                          Focusable="False"
+                                          Padding="0,2,0,2">
+                                <TabPanel IsItemsHost="True"
+                                          Background="Transparent"
+                                          Margin="0" />
+                            </ScrollViewer>
+                            <ContentPresenter x:Name="PART_SelectedContentHost"
+                                              Visibility="Collapsed"
+                                              ContentSource="SelectedContent" />
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <DataTemplate x:Key="EditorContentTemplate">
+            <Border Background="#0DFFFFFF"
+                    BorderBrush="{StaticResource FrostSeparatorBrush}"
+                    BorderThickness="1"
+                    Padding="0"
+                    Margin="0"
+                    CornerRadius="14">
+                <TextBox Text="{Binding TextContent, UpdateSourceTrigger=PropertyChanged}"
+                         AcceptsReturn="True"
+                         AcceptsTab="True"
+                         VerticalScrollBarVisibility="Auto"
+                         HorizontalScrollBarVisibility="Auto"
+                         TextWrapping="{Binding DataContext.Settings.WordWrapEnabled, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource BoolToWrapConverter}}"
+                         FontFamily="{Binding DataContext.Settings.FontFamilyName, RelativeSource={RelativeSource AncestorType=Window}}"
+                         BorderThickness="0"
+                         Padding="20"
+                         Background="Transparent">
+                    <TextBox.FontSize>
+                        <MultiBinding Converter="{StaticResource MultiplyDoubleConverter}">
+                            <Binding Path="DataContext.Settings.FontSizeBase" RelativeSource="{RelativeSource AncestorType=Window}" />
+                            <Binding Path="DataContext.Settings.ZoomLevel" RelativeSource="{RelativeSource AncestorType=Window}" />
+                        </MultiBinding>
+                    </TextBox.FontSize>
+                </TextBox>
+            </Border>
+        </DataTemplate>
+    </Window.Resources>
+
+    <Grid Margin="14">
+        <Border CornerRadius="12"
+                BorderBrush="{StaticResource FrostBorderBrush}"
+                BorderThickness="1"
+                Background="{Binding Settings.TintColor}"
+                Opacity="{Binding Settings.BackgroundOpacity}">
+            <Border.Effect>
+                <DropShadowEffect BlurRadius="24"
+                                  ShadowDepth="0"
+                                  Opacity="0.24"
+                                  Color="#AA000000" />
+            </Border.Effect>
+        </Border>
 
         <Grid>
             <Grid.RowDefinitions>
+                <RowDefinition Height="44" />
                 <RowDefinition Height="*" />
-                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <Grid Grid.Row="0" Margin="10,8,10,6" MouseLeftButtonDown="TopBar_OnMouseLeftButtonDown">
+            <Grid Grid.Row="0" Margin="10,6,10,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="8" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <TabControl ItemsSource="{Binding Tabs}"
-                            SelectedItem="{Binding SelectedTab}">
+                <Border Grid.ColumnSpan="5"
+                        Background="Transparent"
+                        MouseLeftButtonDown="TopBar_OnMouseLeftButtonDown" />
+
+                <TabControl Grid.Column="0"
+                            Margin="0,0,6,0"
+                            VerticalAlignment="Center"
+                            Height="38"
+                            ItemsSource="{Binding Tabs}"
+                            SelectedItem="{Binding SelectedTab}"
+                            Style="{StaticResource HeaderOnlyTabControlStyle}">
                     <TabControl.ItemTemplate>
                         <DataTemplate>
                             <controls:TabHeaderControl />
                         </DataTemplate>
                     </TabControl.ItemTemplate>
-                    <TabControl.ContentTemplate>
-                        <DataTemplate>
-                            <Border Background="#06000000" Padding="0" Margin="0">
-                                <TextBox Text="{Binding TextContent, UpdateSourceTrigger=PropertyChanged}"
-                                         AcceptsReturn="True"
-                                         AcceptsTab="True"
-                                         VerticalScrollBarVisibility="Auto"
-                                         HorizontalScrollBarVisibility="Auto"
-                                         TextWrapping="{Binding DataContext.Settings.WordWrapEnabled, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource BoolToWrapConverter}}"
-                                         FontFamily="{Binding DataContext.Settings.FontFamilyName, RelativeSource={RelativeSource AncestorType=Window}}"
-                                         BorderThickness="0"
-                                         Background="Transparent">
-                                    <TextBox.FontSize>
-                                        <MultiBinding Converter="{StaticResource MultiplyDoubleConverter}">
-                                            <Binding Path="DataContext.Settings.FontSizeBase" RelativeSource="{RelativeSource AncestorType=Window}" />
-                                            <Binding Path="DataContext.Settings.ZoomLevel" RelativeSource="{RelativeSource AncestorType=Window}" />
-                                        </MultiBinding>
-                                    </TextBox.FontSize>
-                                </TextBox>
-                            </Border>
-                        </DataTemplate>
-                    </TabControl.ContentTemplate>
                 </TabControl>
 
-                <controls:DropdownMenuButton Grid.Column="1"
-                                             Margin="8,0,0,0"
-                                             VerticalAlignment="Top"
+                <Button Grid.Column="1"
+                        Content="+"
+                        Width="30"
+                        Height="30"
+                        VerticalAlignment="Center"
+                        Command="{Binding NewTabCommand}" />
+
+                <controls:DropdownMenuButton Grid.Column="3"
+                                             Margin="0,0,6,0"
+                                             VerticalAlignment="Center"
                                              NewTabCommand="{Binding NewTabCommand}"
                                              OpenCommand="{Binding OpenCommand}"
                                              SaveCommand="{Binding SaveCommand}"
@@ -70,16 +132,21 @@
                                              SettingsCommand="{Binding OpenSettingsCommand}"
                                              AboutCommand="{Binding OpenAboutCommand}"
                                              ExitCommand="{Binding CloseAppCommand}" />
+
+                <StackPanel Grid.Column="4"
+                            Orientation="Horizontal"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center">
+                    <Button Content="_" Width="34" Height="30" Click="Minimize_OnClick" />
+                    <Button Content="[]" Width="34" Height="30" Click="MaxRestore_OnClick" />
+                    <Button Content="X" Width="34" Height="30" Click="Close_OnClick" />
+                </StackPanel>
             </Grid>
 
-            <StatusBar Grid.Row="1" VerticalAlignment="Bottom" Background="#08000000" Margin="10,0,10,10">
-                <StatusBarItem>
-                    <TextBlock Text="{Binding SelectedTab.LastAutoSavedAt, StringFormat=Auto-saved: {0:G}}" />
-                </StatusBarItem>
-                <StatusBarItem>
-                    <TextBlock Text="{Binding SelectedTab.FilePath, StringFormat=Path: {0}}" />
-                </StatusBarItem>
-            </StatusBar>
+            <Grid Grid.Row="1" Margin="12,8,12,12">
+                <ContentControl Content="{Binding SelectedTab}"
+                                ContentTemplate="{StaticResource EditorContentTemplate}" />
+            </Grid>
         </Grid>
     </Grid>
 </Window>

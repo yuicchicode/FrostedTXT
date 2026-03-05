@@ -39,10 +39,9 @@
         <Slider Grid.Row="3" Grid.Column="1" Minimum="0.15" Maximum="0.75"
                 Value="{Binding BackgroundOpacity, UpdateSourceTrigger=PropertyChanged}" />
 
-        <TextBlock Grid.Row="4" Grid.Column="0" Text="Blur Mode" VerticalAlignment="Center" />
-        <ComboBox Grid.Row="4" Grid.Column="1"
-                  ItemsSource="{Binding BlurModes}"
-                  SelectedItem="{Binding BlurMode, UpdateSourceTrigger=PropertyChanged}" />
+        <TextBlock Grid.Row="4" Grid.Column="0" Text="Blur Strength" VerticalAlignment="Center" />
+        <Slider Grid.Row="4" Grid.Column="1" Minimum="0" Maximum="40"
+                Value="{Binding BlurLevel, UpdateSourceTrigger=PropertyChanged}" />
 
         <TextBlock Grid.Row="5" Grid.Column="0" Text="Word Wrap" VerticalAlignment="Center" />
         <CheckBox Grid.Row="5" Grid.Column="1"

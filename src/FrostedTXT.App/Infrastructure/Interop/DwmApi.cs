@@ -13,6 +13,9 @@ internal static class DwmApi
     [DllImport("dwmapi.dll")]
     private static extern int DwmEnableBlurBehindWindow(IntPtr hWnd, ref DwmBlurBehind pBlurBehind);
 
+    [DllImport("dwmapi.dll")]
+    private static extern int DwmExtendFrameIntoClientArea(IntPtr hWnd, ref Margins pMarInset);
+
     [StructLayout(LayoutKind.Sequential)]
     private struct DwmBlurBehind
     {
@@ -22,6 +25,15 @@ internal static class DwmApi
         public IntPtr hRgnBlur;
         [MarshalAs(UnmanagedType.Bool)]
         public bool fTransitionOnMaximized;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    private struct Margins
+    {
+        public int Left;
+        public int Right;
+        public int Top;
+        public int Bottom;
     }
 
     public static bool TryApplySystemBackdrop(IntPtr hwnd, int backdropType)
@@ -51,6 +63,26 @@ internal static class DwmApi
             };
 
             return DwmEnableBlurBehindWindow(hwnd, ref blur) == 0;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    public static bool TryExtendFrameIntoClientArea(IntPtr hwnd)
+    {
+        try
+        {
+            var margins = new Margins
+            {
+                Left = -1,
+                Right = -1,
+                Top = -1,
+                Bottom = -1
+            };
+
+            return DwmExtendFrameIntoClientArea(hwnd, ref margins) == 0;
         }
         catch
         {

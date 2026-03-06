@@ -161,7 +161,7 @@
     <Style TargetType="{x:Type TabItem}">
         <Setter Property="Foreground" Value="{StaticResource FrostTextSecondaryBrush}" />
         <Setter Property="Background" Value="Transparent" />
-        <Setter Property="Margin" Value="0,0,2,0" />
+        <Setter Property="Margin" Value="0,6,2,3" />
         <Setter Property="Padding" Value="0" />
         <Setter Property="Height" Value="34" />
         <Setter Property="MinWidth" Value="120" />
@@ -228,6 +228,8 @@
                         <Trigger Property="IsSelected" Value="True">
                             <Setter Property="Foreground" Value="{StaticResource FrostTextPrimaryBrush}" />
                             <Setter Property="Panel.ZIndex" Value="2" />
+                            <Setter Property="Margin" Value="0,2,2,-1" />
+                            <Setter TargetName="TabSurface" Property="BorderThickness" Value="1,1,1,0" />
                             <Trigger.EnterActions>
                                 <BeginStoryboard>
                                     <Storyboard>
@@ -237,7 +239,7 @@
                                                          Duration="0:0:0.18" />
                                         <DoubleAnimation Storyboard.TargetName="TabAccent"
                                                          Storyboard.TargetProperty="Opacity"
-                                                         To="1"
+                                                         To="0"
                                                          Duration="0:0:0.18" />
                                     </Storyboard>
                                 </BeginStoryboard>

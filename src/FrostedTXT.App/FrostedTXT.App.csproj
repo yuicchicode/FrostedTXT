@@ -7,5 +7,11 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <AssemblyName>FrostedTXT.App</AssemblyName>
     <RootNamespace>FrostedTXT.App</RootNamespace>
+    <ApplicationIcon>Assets\icon.ico</ApplicationIcon>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Resource Include="Assets\icon.ico" />
+    <Resource Include="Assets\app-logo.png" />
+  </ItemGroup>
 </Project>

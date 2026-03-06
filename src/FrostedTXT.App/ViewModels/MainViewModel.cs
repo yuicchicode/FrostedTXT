@@ -42,6 +42,7 @@ public sealed class MainViewModel : ObservableObject
         CloseAppCommand = new RelayCommand(() => RequestClose?.Invoke());
         OpenSettingsCommand = new RelayCommand(() => RequestOpenSettings?.Invoke());
         OpenAboutCommand = new RelayCommand(() => RequestOpenAbout?.Invoke());
+        ToggleFullscreenWindowedCommand = new RelayCommand(() => RequestToggleFullscreenWindowed?.Invoke());
     }
 
     public ObservableCollection<DocumentTabViewModel> Tabs { get; }
@@ -69,10 +70,12 @@ public sealed class MainViewModel : ObservableObject
     public RelayCommand CloseAppCommand { get; }
     public RelayCommand OpenSettingsCommand { get; }
     public RelayCommand OpenAboutCommand { get; }
+    public RelayCommand ToggleFullscreenWindowedCommand { get; }
 
     public Action? RequestClose { get; set; }
     public Action? RequestOpenSettings { get; set; }
     public Action? RequestOpenAbout { get; set; }
+    public Action? RequestToggleFullscreenWindowed { get; set; }
 
     public async Task InitializeAsync()
     {

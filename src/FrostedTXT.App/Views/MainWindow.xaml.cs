@@ -1,5 +1,8 @@
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
+using System.Windows.Media;
 using FrostedTXT.App.Services;
 using FrostedTXT.App.ViewModels;
 
@@ -11,6 +14,7 @@ public partial class MainWindow : Window
     private readonly SettingsService _settingsService;
     private readonly FontCatalogService _fontCatalogService;
     private readonly WindowEffectsService _windowEffectsService;
+    private readonly WindowStateService _windowStateService;
 
     public MainWindow()
     {
@@ -21,6 +25,7 @@ public partial class MainWindow : Window
         var draftRecoveryService = new DraftRecoveryService(jsonStore);
         _fontCatalogService = new FontCatalogService();
         _windowEffectsService = new WindowEffectsService();
+        _windowStateService = new WindowStateService();
 
         _viewModel = new MainViewModel(
             new DocumentService(),
@@ -33,6 +38,7 @@ public partial class MainWindow : Window
         _viewModel.RequestClose = Close;
         _viewModel.RequestOpenSettings = OpenSettings;
         _viewModel.RequestOpenAbout = OpenAbout;
+        _viewModel.RequestToggleFullscreenWindowed = ToggleWindowedFullscreen;
 
         DataContext = _viewModel;
 
@@ -83,17 +89,36 @@ public partial class MainWindow : Window
         window.ShowDialog();
     }
 
-    private void TopBar_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+    private void HeaderRow_OnPreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
     {
+        if (e.ChangedButton != MouseButton.Left || IsInteractiveTarget(e.OriginalSource as DependencyObject))
+        {
+            return;
+        }
+
         if (e.ClickCount == 2)
         {
-            ToggleMaximizeRestore();
+            ToggleWindowedFullscreen();
+            e.Handled = true;
             return;
         }
 
         if (e.ButtonState == MouseButtonState.Pressed)
         {
-            DragMove();
+            if (_windowStateService.IsWindowedFullscreen)
+            {
+                _windowStateService.ExitWindowedFullscreen(this);
+            }
+
+            try
+            {
+                DragMove();
+                e.Handled = true;
+            }
+            catch
+            {
+                // DragMove can throw if mouse button state changes mid-call.
+            }
         }
     }
 
@@ -104,7 +129,7 @@ public partial class MainWindow : Window
 
     private void MaxRestore_OnClick(object sender, RoutedEventArgs e)
     {
-        ToggleMaximizeRestore();
+        ToggleWindowedFullscreen();
     }
 
     private void Close_OnClick(object sender, RoutedEventArgs e)
@@ -112,8 +137,29 @@ public partial class MainWindow : Window
         Close();
     }
 
-    private void ToggleMaximizeRestore()
+    private void ToggleWindowedFullscreen()
     {
-        WindowState = WindowState == WindowState.Maximized ? WindowState.Normal : WindowState.Maximized;
+        _windowStateService.ToggleWindowedFullscreen(this);
+    }
+
+    private static bool IsInteractiveTarget(DependencyObject? source)
+    {
+        while (source is not null)
+        {
+            if (source is ButtonBase
+                || source is TextBoxBase
+                || source is ComboBox
+                || source is Slider
+                || source is ScrollBar
+                || source is TabItem
+                || source is MenuItem)
+            {
+                return true;
+            }
+
+            source = VisualTreeHelper.GetParent(source);
+        }
+
+        return false;
     }
 }
